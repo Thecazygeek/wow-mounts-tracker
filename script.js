@@ -17,6 +17,11 @@ document.getElementById('reset').addEventListener('click', function() {
     resetForm();
 });
 
+document.getElementById('status-filter').addEventListener('change', function() {
+    const status = document.getElementById('status-filter').value;
+    filterMounts(status);
+});
+
 async function fetchRealms(region) {
     const clientId = CONFIG.CLIENT_ID;
     const clientSecret = CONFIG.CLIENT_SECRET;
@@ -39,7 +44,7 @@ async function fetchRealms(region) {
     const tokenData = await tokenResponse.json();
     const token = tokenData.access_token;
 
-    const apiUrl = `https://${region}.api.blizzard.com/data/wow/realm/index?namespace=dynamic-${region}&locale=en_US&access_token=${token}`;
+    const apiUrl = `https://${region}.api.blizzard.com/data/wow/realm/index?namespace=dynamic-${region}&locale=fr_FR&access_token=${token}`;
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
@@ -49,7 +54,7 @@ async function fetchRealms(region) {
 
     const data = await response.json();
     const realmSelect = document.getElementById('realm');
-    realmSelect.innerHTML = '<option value="" disabled selected>Select Realm</option>';
+    realmSelect.innerHTML = '<option value="" disabled selected>Sélectionner le Royaume</option>';
 
     // Trier les serveurs par ordre alphabétique
     const sortedRealms = data.realms.sort((a, b) => a.name.localeCompare(b.name));
@@ -71,52 +76,4 @@ async function getMounts(character, realm, region) {
         method: 'POST',
         headers: {
             'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'grant_type=client_credentials'
-    });
-
-    if (!tokenResponse.ok) {
-        console.error('Failed to obtain access token');
-        return;
-    }
-
-    const tokenData = await tokenResponse.json();
-    const token = tokenData.access_token;
-
-    const apiUrl = `https://${region}.api.blizzard.com/profile/wow/character/${realm}/${character}/collections/mounts?namespace=profile-${region}&locale=en_US&access_token=${token}`;
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-        console.error('Failed to fetch mounts');
-        return;
-    }
-
-    const data = await response.json();
-    displayMounts(data);
-}
-
-function displayMounts(data) {
-    const results = document.getElementById('results');
-    results.innerHTML = '';
-
-    const mounts = data.mounts;
-    const ownedMounts = mounts.filter(mount => mount.is_useable);
-    const missingMounts = mounts.filter(mount => !mount.is_useable);
-
-    results.innerHTML += `<h2>Owned Mounts (${ownedMounts.length})</h2>`;
-    ownedMounts.forEach(mount => {
-        results.innerHTML += `<p>${mount.mount.name}</p>`;
-    });
-
-    results.innerHTML += `<h2>Missing Mounts (${missingMounts.length})</h2>`;
-    missingMounts.forEach(mount => {
-        results.innerHTML += `<p>${mount.mount.name}</p>`;
-    });
-}
-
-function resetForm() {
-    document.getElementById('form').reset();
-    document.getElementById('realm').innerHTML = '<option value="" disabled selected>Select Realm</option>';
-    document.getElementById('results').innerHTML = '';
-}
+            'Content-Type': 'application/x
