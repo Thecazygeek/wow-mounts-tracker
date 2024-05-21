@@ -10,7 +10,16 @@
     <h1>WoW Mounts Tracker</h1>
     <form id="form">
         <input type="text" id="character" placeholder="Character Name" required>
-        <input type="text" id="realm" placeholder="Realm" required>
+        <select id="region" required>
+            <option value="" disabled selected>Select Region</option>
+            <option value="us">US</option>
+            <option value="eu">EU</option>
+            <option value="kr">KR</option>
+            <option value="tw">TW</option>
+        </select>
+        <select id="realm" required>
+            <option value="" disabled selected>Select Realm</option>
+        </select>
         <button type="submit">Get Mounts</button>
     </form>
     <div id="results"></div>
