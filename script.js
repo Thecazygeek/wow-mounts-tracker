@@ -45,7 +45,10 @@ async function fetchRealms(region) {
     const realmSelect = document.getElementById('realm');
     realmSelect.innerHTML = '<option value="" disabled selected>Select Realm</option>';
 
-    data.realms.forEach(realm => {
+    // Trier les serveurs par ordre alphabétique
+    const sortedRealms = data.realms.sort((a, b) => a.name.localeCompare(b.name));
+
+    sortedRealms.forEach(realm => {
         const option = document.createElement('option');
         option.value = realm.slug;
         option.textContent = realm.name;
@@ -54,8 +57,8 @@ async function fetchRealms(region) {
 }
 
 async function getMounts(character, realm, region) {
-    const clientId = 'VOTRE_CLIENT_ID';
-    const clientSecret = 'VOTRE_CLIENT_SECRET';
+    const clientId = '13668d26206948238dffde9b008d72e5';
+    const clientSecret = 'PcHogXGJ1emRj08wT94RAUDE55CHsWwC';
 
     const tokenUrl = `https://${region}.battle.net/oauth/token`;
     const tokenResponse = await fetch(tokenUrl, {
