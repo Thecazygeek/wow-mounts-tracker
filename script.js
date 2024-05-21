@@ -1,3 +1,5 @@
+import CONFIG from './config.js';
+
 document.getElementById('region').addEventListener('change', function() {
     const region = document.getElementById('region').value;
     fetchRealms(region);
@@ -11,9 +13,13 @@ document.getElementById('form').addEventListener('submit', function(event) {
     getMounts(character, realm, region);
 });
 
+document.getElementById('reset').addEventListener('click', function() {
+    resetForm();
+});
+
 async function fetchRealms(region) {
-    const clientId = '13668d26206948238dffde9b008d72e5';
-    const clientSecret = 'PcHogXGJ1emRj08wT94RAUDE55CHsWwC';
+    const clientId = CONFIG.CLIENT_ID;
+    const clientSecret = CONFIG.CLIENT_SECRET;
 
     const tokenUrl = `https://${region}.battle.net/oauth/token`;
     const tokenResponse = await fetch(tokenUrl, {
@@ -57,8 +63,8 @@ async function fetchRealms(region) {
 }
 
 async function getMounts(character, realm, region) {
-    const clientId = '13668d26206948238dffde9b008d72e5';
-    const clientSecret = 'PcHogXGJ1emRj08wT94RAUDE55CHsWwC';
+    const clientId = CONFIG.CLIENT_ID;
+    const clientSecret = CONFIG.CLIENT_SECRET;
 
     const tokenUrl = `https://${region}.battle.net/oauth/token`;
     const tokenResponse = await fetch(tokenUrl, {
@@ -107,4 +113,10 @@ function displayMounts(data) {
     missingMounts.forEach(mount => {
         results.innerHTML += `<p>${mount.mount.name}</p>`;
     });
+}
+
+function resetForm() {
+    document.getElementById('form').reset();
+    document.getElementById('realm').innerHTML = '<option value="" disabled selected>Select Realm</option>';
+    document.getElementById('results').innerHTML = '';
 }
