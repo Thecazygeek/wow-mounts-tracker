@@ -12,8 +12,8 @@ document.getElementById('form').addEventListener('submit', function(event) {
 });
 
 async function fetchRealms(region) {
-    const clientId = '13668d26206948238dffde9b008d72e5';
-    const clientSecret = 'PcHogXGJ1emRj08wT94RAUDE55CHsWwC';
+    const clientId = 'VOTRE_CLIENT_ID';
+    const clientSecret = 'VOTRE_CLIENT_SECRET';
 
     const tokenUrl = `https://${region}.battle.net/oauth/token`;
     const tokenResponse = await fetch(tokenUrl, {
@@ -24,13 +24,24 @@ async function fetchRealms(region) {
         },
         body: 'grant_type=client_credentials'
     });
+
+    if (!tokenResponse.ok) {
+        console.error('Failed to obtain access token');
+        return;
+    }
+
     const tokenData = await tokenResponse.json();
     const token = tokenData.access_token;
 
     const apiUrl = `https://${region}.api.blizzard.com/data/wow/realm/index?namespace=dynamic-${region}&locale=en_US&access_token=${token}`;
     const response = await fetch(apiUrl);
-    const data = await response.json();
 
+    if (!response.ok) {
+        console.error('Failed to fetch realms');
+        return;
+    }
+
+    const data = await response.json();
     const realmSelect = document.getElementById('realm');
     realmSelect.innerHTML = '<option value="" disabled selected>Select Realm</option>';
 
@@ -55,13 +66,24 @@ async function getMounts(character, realm, region) {
         },
         body: 'grant_type=client_credentials'
     });
+
+    if (!tokenResponse.ok) {
+        console.error('Failed to obtain access token');
+        return;
+    }
+
     const tokenData = await tokenResponse.json();
     const token = tokenData.access_token;
 
     const apiUrl = `https://${region}.api.blizzard.com/profile/wow/character/${realm}/${character}/collections/mounts?namespace=profile-${region}&locale=en_US&access_token=${token}`;
     const response = await fetch(apiUrl);
-    const data = await response.json();
 
+    if (!response.ok) {
+        console.error('Failed to fetch mounts');
+        return;
+    }
+
+    const data = await response.json();
     displayMounts(data);
 }
 
