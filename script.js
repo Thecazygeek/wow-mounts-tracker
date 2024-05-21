@@ -1,16 +1,22 @@
+document.getElementById('region').addEventListener('change', function() {
+    const region = document.getElementById('region').value;
+    fetchRealms(region);
+});
+
 document.getElementById('form').addEventListener('submit', function(event) {
     event.preventDefault();
     const character = document.getElementById('character').value;
     const realm = document.getElementById('realm').value;
-    getMounts(character, realm);
+    const region = document.getElementById('region').value;
+    getMounts(character, realm, region);
 });
 
-async function getMounts(character, realm) {
-    const clientId = '13668d26206948238dffde9b008d72e5';
-    const clientSecret = 'PcHogXGJ1emRj08wT94RAUDE55CHsWwC';
+async function fetchRealms(region) {
+    const clientId = 'VOTRE_CLIENT_ID';
+    const clientSecret = 'VOTRE_CLIENT_SECRET';
 
-    // Obtenir un token d'accès
-    const tokenResponse = await fetch('https://us.battle.net/oauth/token', {
+    const tokenUrl = `https://${region}.battle.net/oauth/token`;
+    const tokenResponse = await fetch(tokenUrl, {
         method: 'POST',
         headers: {
             'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
@@ -21,8 +27,39 @@ async function getMounts(character, realm) {
     const tokenData = await tokenResponse.json();
     const token = tokenData.access_token;
 
-    // Obtenir les montures
-    const response = await fetch(`https://us.api.blizzard.com/profile/wow/character/${realm}/${character}/collections/mounts?namespace=profile-us&locale=en_US&access_token=${token}`);
+    const apiUrl = `https://${region}.api.blizzard.com/data/wow/realm/index?namespace=dynamic-${region}&locale=en_US&access_token=${token}`;
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    const realmSelect = document.getElementById('realm');
+    realmSelect.innerHTML = '<option value="" disabled selected>Select Realm</option>';
+
+    data.realms.forEach(realm => {
+        const option = document.createElement('option');
+        option.value = realm.slug;
+        option.textContent = realm.name;
+        realmSelect.appendChild(option);
+    });
+}
+
+async function getMounts(character, realm, region) {
+    const clientId = 'VOTRE_CLIENT_ID';
+    const clientSecret = 'VOTRE_CLIENT_SECRET';
+
+    const tokenUrl = `https://${region}.battle.net/oauth/token`;
+    const tokenResponse = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials'
+    });
+    const tokenData = await tokenResponse.json();
+    const token = tokenData.access_token;
+
+    const apiUrl = `https://${region}.api.blizzard.com/profile/wow/character/${realm}/${character}/collections/mounts?namespace=profile-${region}&locale=en_US&access_token=${token}`;
+    const response = await fetch(apiUrl);
     const data = await response.json();
 
     displayMounts(data);
