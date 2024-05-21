@@ -1,28 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WoW Mounts Tracker</title>
+    <title>Suivi des Montures WoW</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>WoW Mounts Tracker</h1>
+    <h1>Suivi des Montures WoW</h1>
     <form id="form">
-        <input type="text" id="character" placeholder="Character Name" required>
+        <input type="text" id="character" placeholder="Nom du Personnage" required>
         <select id="region" required>
-            <option value="" disabled selected>Select Region</option>
+            <option value="" disabled selected>Sélectionner la région</option>
             <option value="us">US</option>
             <option value="eu">EU</option>
             <option value="kr">KR</option>
             <option value="tw">TW</option>
         </select>
         <select id="realm" required>
-            <option value="" disabled selected>Select Realm</option>
+            <option value="" disabled selected>Sélectionner le Royaume</option>
         </select>
-        <button type="submit">Get Mounts</button>
+        <button type="submit">Obtenir les Montures</button>
+        <button type="button" id="reset">Réinitialiser</button>
     </form>
-    <div id="results"></div>
+    <div id="filter">
+        <label for="status-filter">Filtrer par statut :</label>
+        <select id="status-filter">
+            <option value="all">Toutes les Montures</option>
+            <option value="owned">Montures Possédées</option>
+            <option value="missing">Montures Manquantes</option>
+        </select>
+    </div>
+    <table id="mounts-table">
+        <thead>
+            <tr>
+                <th>Monture</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody id="mounts-body"></tbody>
+    </table>
     <script src="script.js"></script>
 </body>
 </html>
