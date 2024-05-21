@@ -12,8 +12,8 @@ document.getElementById('form').addEventListener('submit', function(event) {
 });
 
 async function fetchRealms(region) {
-    const clientId = 'VOTRE_CLIENT_ID';
-    const clientSecret = 'VOTRE_CLIENT_SECRET';
+    const clientId = '13668d26206948238dffde9b008d72e5';
+    const clientSecret = 'PcHogXGJ1emRj08wT94RAUDE55CHsWwC';
 
     const tokenUrl = `https://${region}.battle.net/oauth/token`;
     const tokenResponse = await fetch(tokenUrl, {
